@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:qr_image_generator/qr_image_generator.dart';
+import 'package:path_provider/path_provider.dart';
 
 class QRGeneratorScreen extends StatefulWidget {
   const QRGeneratorScreen({super.key});
@@ -11,7 +15,23 @@ class QRGeneratorScreen extends StatefulWidget {
 class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
   final informationController = TextEditingController();
   final fileNameController = TextEditingController();
-  String information = "";
+
+  Future saveQrImage(String data, String fileName) async{
+    String? fileDirectory = await FilePicker.platform.getDirectoryPath();
+    String? filePath = "${fileDirectory.toString()}/${fileName.toString()}.png";
+
+    final generator = QRGenerator();
+
+    await generator.generate(
+      data: data,
+      filePath: filePath,
+      scale: 10,
+      padding: 2,
+      foregroundColor: Colors.black,
+      backgroundColor: Colors.white,
+      errorCorrectionLevel: ErrorCorrectionLevel.medium,
+    );
+  }
 
   @override
   void dispose() {
@@ -51,34 +71,18 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(fixedSize: Size(150, 10)),
-                  onPressed: () {
-                    setState(() {
-                      information = informationController.text;
-                    });
+                  onPressed: () async {
+                    await saveQrImage(informationController.text, fileNameController.text);
                   },
                   child: Text(
                     "Generate"
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(fixedSize: Size(150, 10)),
-                  onPressed: () {}, 
-                  child: Text(
-                    "Save",
-                  )
-                )
               ]
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(40, 20, 40, 0),
-              child: QrImage(
-                data: information,
-                version: QrVersions.auto,
-                size: 200.0,
-              )
             ),
           ],
         ),
-      )); 
+      )
+    ); 
   }
 }

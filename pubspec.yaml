@@ -44,8 +44,10 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  qr_image_generator: ^0.2.8
   flutter_lints: ^2.0.0
-  qr_flutter: ^4.0.0
+  file_picker: ^5.2.5
+  path_provider: ^2.0.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
