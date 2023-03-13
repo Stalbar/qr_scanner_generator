@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:regexed_validator/regexed_validator.dart';
 
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
@@ -111,14 +114,23 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                             child: Text(
                               'Open in browser',
                             ),
-                            onPressed: () {},
+                            onPressed: result != null && validator.url(result!.code.toString())
+                              ? () {
+                                _launchURL(result!.code.toString());
+                                setState(() {
+                                  result = null;
+                                });
+                              } : null
                           ),
                           SizedBox(height: 10,),
                         ],
                       ),
                     ),
-                    onLongPress: () {
-
+                    onLongPress: () async {
+                      await Clipboard.setData(
+                        ClipboardData(text: "${result!.code}")
+                      );
+                      setState(() => result = null);
                     },
                   ),
                 ],
@@ -156,5 +168,9 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         result = scanData;
       });
     }); 
+  }
+
+  void _launchURL(String url) async {
+    await launch(url);
   }
 }
