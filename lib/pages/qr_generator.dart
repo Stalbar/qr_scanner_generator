@@ -16,7 +16,7 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
   final informationController = TextEditingController();
   final fileNameController = TextEditingController();
 
-  Future saveQrImage(String data, String fileName) async{
+  Future saveQrImage(String data, String fileName) async {
     String? fileDirectory = await FilePicker.platform.getDirectoryPath();
     String? filePath = "${fileDirectory.toString()}/${fileName.toString()}.png";
 
@@ -39,50 +39,45 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
     informationController.dispose();
     fileNameController.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'QR code generator', 
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'QR code generator',
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+            child: TextField(
+              controller: informationController,
+            ),
           ),
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
-              child: TextField(
-                controller: informationController,
-              ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+            child: TextField(
+              controller: fileNameController,
             ),
-            SizedBox(
-              height: 20,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(fixedSize: Size(150, 10)),
+              onPressed: () async {
+                await saveQrImage(
+                    informationController.text, fileNameController.text);
+              },
+              child: Text("Generate"),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
-              child: TextField(
-                controller: fileNameController,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(fixedSize: Size(150, 10)),
-                  onPressed: () async {
-                    await saveQrImage(informationController.text, fileNameController.text);
-                  },
-                  child: Text(
-                    "Generate"
-                  ),
-                ),
-              ]
-            ),
-          ],
-        ),
-      )
-    ); 
+          ]),
+        ],
+      ),
+    ));
   }
 }

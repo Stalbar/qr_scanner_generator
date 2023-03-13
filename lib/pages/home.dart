@@ -25,7 +25,15 @@ class HomeScreen extends StatelessWidget {
                 child: Text(
                   "Generate QR code"
                 ),
-              )
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/scanner');
+                },
+                child: Text(
+                  "Scan QR code",
+                )
+              ),
             ],
           ),
         ),
