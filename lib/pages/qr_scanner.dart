@@ -32,37 +32,108 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
           Expanded(
-            flex: 4, child: _buildQrView(context)
+            flex: 4,
+            child: _buildQrView(context),
           ),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
+          Visibility(
+            visible: result != null ? true : false,
+            child: Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (result != null)
-                    Text(
-                      '${result!.code}'
-                    )
-                  else
-                    const Text('Scan a code'),
+                  InkWell(
+                    child: Container(
+                      height: 150,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Decoded: '
+                              ),
+                              SizedBox(
+                                width: 100,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    result = null;
+                                  });
+                                }, 
+                                icon: Icon(
+                                  Icons.close,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: result != null 
+                                  ? Text(
+                                    "${result!.code}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.start,
+                                  )
+                                  : Text(
+                                    "No data",
+                                  ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              )
+                            ],
+                          ),
+                          TextButton(
+                            child: Text(
+                              'Open in browser',
+                            ),
+                            onPressed: () {},
+                          ),
+                          SizedBox(height: 10,),
+                        ],
+                      ),
+                    ),
+                    onLongPress: () {
+
+                    },
+                  ),
                 ],
-              ),
+              )
             )
           )
-        ], 
+        ]
       )
     );
   }
 
   Widget _buildQrView(BuildContext context) {
     var scanArea = (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) 
-      ? 150.0 
-      : 300.0;
+      ? 300.0 
+      : 500.0;
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
