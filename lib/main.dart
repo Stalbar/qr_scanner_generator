@@ -7,9 +7,9 @@ void main() {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
-      '/': (context) => HomeScreen(),
-      '/generator': (context) => QRGeneratorScreen(),
-      '/scanner': (context) => QRScannerScreen(),
+      '/': (context) => const HomeScreen(),
+      '/generator': (context) => const QRGeneratorScreen(),
+      '/scanner': (context) => const QRScannerScreen(),
     },
   ));
 }

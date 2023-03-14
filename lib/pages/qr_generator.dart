@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:qr_image_generator/qr_image_generator.dart';
@@ -17,6 +15,9 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
   final fileNameController = TextEditingController();
 
   Future saveQrImage(String data, String fileName) async {
+    if (fileName == '' || data == '') {
+      return;
+    }
     String? fileDirectory = await FilePicker.platform.getDirectoryPath();
     String? filePath = "${fileDirectory.toString()}/${fileName.toString()}.png";
 
@@ -45,35 +46,41 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'QR code generator',
         ),
       ),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
             child: TextField(
+              decoration: const InputDecoration(
+                hintText: 'Data',
+              ),
               controller: informationController,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
             child: TextField(
+              decoration: const InputDecoration(
+                hintText: 'File Name',
+              ),
               controller: fileNameController,
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             ElevatedButton(
-              style: ElevatedButton.styleFrom(fixedSize: Size(150, 10)),
+              style: ElevatedButton.styleFrom(fixedSize: const Size(150, 10)),
               onPressed: () async {
                 await saveQrImage(
                     informationController.text, fileNameController.text);
               },
-              child: Text("Generate"),
+              child: const Text("Generate"),
             ),
           ]),
         ],

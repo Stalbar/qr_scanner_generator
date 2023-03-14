@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:regexed_validator/regexed_validator.dart';
@@ -53,23 +50,24 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                       width: 300,
                       decoration: BoxDecoration(
                         color: Colors.grey[900],
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderRadius: const BorderRadius.all(Radius.circular(20)),
                       ),
                       child: Column(
                         children: [
-                          SizedBox(
-                            height: 10,
-                          ),
+
                           Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                'Decoded: '
+                              const Text(
+                                'Decoded: ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                )
                               ),
-                              SizedBox(
-                                width: 100,
+                              const SizedBox(
+                                width: 180,
                               ),
                               IconButton(
                                 onPressed: () {
@@ -77,7 +75,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                     result = null;
                                   });
                                 }, 
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.close,
                                   size: 15,
                                   color: Colors.white,
@@ -85,44 +83,46 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: result != null 
-                                  ? Text(
-                                    "${result!.code}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.start,
-                                  )
-                                  : Text(
-                                    "No data",
-                                  ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              )
-                            ],
-                          ),
-                          TextButton(
-                            child: Text(
-                              'Open in browser',
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: result != null 
+                                    ? ListView(
+                                      children: [
+                                          Text(
+                                          "${result!.code}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ]
+                                    )
+                                    : const Text(
+                                      "No data",
+                                    ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                )
+                              ],
                             ),
-                            onPressed: result != null && validator.url(result!.code.toString())
-                              ? () {
-                                _launchURL(result!.code.toString());
-                                setState(() {
-                                  result = null;
-                                });
-                              } : null
                           ),
-                          SizedBox(height: 10,),
+                          Visibility(
+                            visible: result != null && validator.url(result!.code.toString()),
+                            child: TextButton(
+                              onPressed: () {
+                                  _launchURL(result!.code.toString());
+                                  setState(() {
+                                    result = null;
+                                  });
+                                },
+                              child: const Text(
+                                'Open in browser',
+                              )
+                            ),
+                          ),
+                          const SizedBox(height: 10,),
                         ],
                       ),
                     ),
@@ -130,7 +130,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                       await Clipboard.setData(
                         ClipboardData(text: "${result!.code}")
                       );
-                      setState(() => result = null);
                     },
                   ),
                 ],
